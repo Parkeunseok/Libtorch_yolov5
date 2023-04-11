@@ -25,6 +25,8 @@ Real time object detection with deployment of YOLOv5 through LibTorch C++ API
 
 3. Edit "CMakeLists.txt" to configure OpenCV and LibTorch correctly.
 
+
+
 4. Compile and run.
 
    ```shell
@@ -33,3 +35,8 @@ Real time object detection with deployment of YOLOv5 through LibTorch C++ API
    source devel/setup.bash
    roslaunch Libtorch_yolov5 Libtorch_yolov5.launch 
    ```
+   
+5. Weights file share
+    ```shell
+    https://drive.google.com/drive/folders/0AMhURE7Yf6NwUk9PVA
+   ``` 
