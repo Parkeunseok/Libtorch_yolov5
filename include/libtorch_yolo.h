@@ -35,10 +35,12 @@ cv_bridge::CvImagePtr mImagePtr;
 
 // publish data
 darknet_ros_msgs::BoundingBoxes boundingBoxesResults;
+darknet_ros_msgs::BoundingBoxes trafficBoxesResults;
 
 // publish && subscribe
 ros::Publisher bounding_pub;
 ros::Publisher boundings_pub;
+ros::Publisher traffic_pub;
 ros::Subscriber subImg;
 
 //yolo
