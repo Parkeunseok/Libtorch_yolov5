@@ -18,6 +18,7 @@ Libtorch_YOLO::Libtorch_YOLO(ros::NodeHandle node, torch::DeviceType di_type) : 
     // publish
     //bounding_pub = node.advertise<darknet_ros_msgs::BoundingBox>("/core/yolo", 1000);
     boundings_pub = node.advertise<darknet_ros_msgs::BoundingBoxes>("/darknet_ros/bounding_boxes", 1000);
+    traffic_pub = node.advertise<darknet_ros_msgs::BoundingBoxes>("/darknet_ros/traffic_boxes", 1000);
 
     // subscribe
     subImg = node.subscribe<sensor_msgs::CompressedImage>("/Camera_1/image_raw/compressed", 1, &Libtorch_YOLO::imageCallback, this);
@@ -49,6 +50,7 @@ std::vector<std::string> Libtorch_YOLO::LoadNames(const std::string &path)
 void Libtorch_YOLO::imageCallback(const sensor_msgs::CompressedImageConstPtr &msg)
 {
     boundingBoxesResults.bounding_boxes.clear();
+    trafficBoxesResults.bounding_boxes.clear();
     mImagePtr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
     mImage = mImagePtr->image;
     // imageHeader_ = msg->header;
@@ -72,8 +74,9 @@ void Libtorch_YOLO::Demo(cv::Mat &img, const std::vector<std::vector<Detection>>
         return;
     }
     int i=0;
+    int traffic_id=0;
     darknet_ros_msgs::BoundingBox bb;
-
+    darknet_ros_msgs::BoundingBox traffic_bb;
     for (const auto &detection : detections[0]) 
     {
         const auto &box = detection.bbox;
@@ -120,10 +123,30 @@ void Libtorch_YOLO::Demo(cv::Mat &img, const std::vector<std::vector<Detection>>
         // bounding_pub.publish(bb);
         boundingBoxesResults.bounding_boxes.push_back(bb);
         i++;
+
+
+        if(class_names[class_idx] != "Car")
+        {
+            traffic_bb.xmin = box.x;
+            traffic_bb.ymin = box.y;
+            traffic_bb.xmax = box.x + box.width;
+            traffic_bb.ymax = box.y + box.height;
+            traffic_bb.Class = class_names[class_idx];
+            traffic_bb.probability = score;
+            traffic_bb.id = traffic_id;
+
+            trafficBoxesResults.bounding_boxes.push_back(traffic_bb);
+            traffic_id++;
+        }
     }
+
 
     boundingBoxesResults.header.stamp = ros::Time::now();
     boundingBoxesResults.header.frame_id = "detection";
     // boundingBoxesResults.image_header = headerBuff_[(buffIndex_ + 1) % 3];
     boundings_pub.publish(boundingBoxesResults);
+
+    trafficBoxesResults.header.stamp = ros::Time::now();
+    trafficBoxesResults.header.frame_id = "detection";
+    traffic_pub.publish(trafficBoxesResults);
 }
