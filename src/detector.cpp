@@ -38,7 +38,7 @@ Detector::Run(const cv::Mat& img, float conf_threshold, float iou_threshold) {
     cv::Mat img_input = img.clone();
     
 
-    std::vector<float> pad_info = LetterboxImage(img_input, img_input, cv::Size(640, 640));
+    std::vector<float> pad_info = LetterboxImage(img_input, img_input, cv::Size(1280, 1280));
     const float pad_w = pad_info[0];
     const float pad_h = pad_info[1];
     const float scale = pad_info[2];

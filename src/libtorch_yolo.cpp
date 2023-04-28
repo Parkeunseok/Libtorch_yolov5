@@ -1,6 +1,6 @@
 #include "libtorch_yolo.h"
 
-Libtorch_YOLO::Libtorch_YOLO(ros::NodeHandle node, torch::DeviceType di_type) : detector_("/home/a/yolo_ws/src/Libtorch_yolov5.torchscript", di_type)
+Libtorch_YOLO::Libtorch_YOLO(ros::NodeHandle node, torch::DeviceType di_type) : detector_("/home/a/yolo_ws/src/20230428_class14.torchscript", di_type)
 {
     device_type_ = di_type;
     conf_thres_ = 0.4;
