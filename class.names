@@ -12,3 +12,5 @@ limit100
 limit110
 limit120
 traffic_sign
+limit30
+limit130
